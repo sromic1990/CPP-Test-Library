@@ -6,8 +6,21 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+set(ADDITIONAL_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/tests")
 
-add_executable(CPPTestLibrary ${SOURCE_DIR}/main.cpp)
+# Glob all source files
+file(GLOB SOURCES
+    "${SOURCE_DIR}/*.cpp"
+    "${ADDITIONAL_SOURCE_DIR}/*.cpp"
+)
+
+# Include directories if needed
+include_directories(
+    "${SOURCE_DIR}"
+    "${ADDITIONAL_SOURCE_DIR}"
+)
+
+add_executable(Output ${SOURCES})
 
 #Platform specific settings
 if (MSVC)
