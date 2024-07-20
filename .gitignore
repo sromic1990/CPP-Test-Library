@@ -1,0 +1,52 @@
+# Ignore build directories
+/build/
+/Build/
+/Builds/
+/bin/
+/Bin/
+/obj/
+/Obj/
+
+# Ignore executable files
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+
+# Ignore object files and libraries
+*.o
+*.obj
+*.lib
+*.a
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+CMakeLists.txt.user
+
+# Ignore Visual Studio specific files
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+*.pdb
+*.idb
+*.ipch
+*.opensdf
+*.sdf
+
+# Ignore Code::Blocks specific files
+*.depend
+*.layout
+*.cbp
+*.cbl
+*.layout
+
+# Ignore other IDE specific files
+*.idea/
+.vscode/
+.clangd/

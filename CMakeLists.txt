@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.0)
+
+project(CPPTestLibrary)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+
+add_executable(CPPTestLibrary ${SOURCE_DIR}/main.cpp)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/lib")
