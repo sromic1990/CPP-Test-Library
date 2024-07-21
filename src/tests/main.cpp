@@ -1,7 +1,7 @@
+#include <iostream>
 #include "Test.h"
 
 int main()
 {
-    SouravTDD::runTests();
-    return 0;
+    return SouravTDD::runTests(std::cout);
 }

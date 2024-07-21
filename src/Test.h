@@ -1,7 +1,6 @@
 #ifndef SOURAVTDD_TEST_H
 #define SOURAVTDD_TEST_H
-
-#include <iostream>
+#include <ostream>
 #include <string_view>
 #include <vector>
 
@@ -34,13 +33,20 @@ namespace SouravTDD
         return tests;
     }
 
-    inline void runTests()
+    inline int runTests(std::ostream& output)
     {
+        output      << "Running "
+                    << getTests().size()
+                    << " tests\n";
+
+        int numPassed = 0;
+        int numFailed = 0;
+
         for (auto * test : getTests())
         {
-            std::cout<<"---------------\n"
-            << test->getName()
-            << std::endl;
+            output      <<"---------------\n"
+                        << test->getName()
+                        << std::endl;
             
             try
             {
@@ -53,13 +59,26 @@ namespace SouravTDD
 
             if (test->passed())
             {
-                std::cout << "PASSED\n";
+                ++numPassed;
+                output << "PASSED\n";
             }
             else
             {
-                std::cout << "FAILED: " << test->getReason() << "\n";
+                ++numFailed;
+                output << "FAILED: " << test->getReason() << "\n";
             }
         }
+
+        output << "---------------\n";
+        if (numFailed == 0)
+        {
+            output << "All tests passed" << std::endl;
+        }
+        else
+        {
+            output << "Tests passed: " << numPassed << "\nTests failed: " << numFailed << std::endl;
+        }
+        return numFailed;
     }
 }
 
