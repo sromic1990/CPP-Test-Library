@@ -23,7 +23,7 @@ include_directories(
 add_executable(Output ${SOURCES})
 
 #Platform specific settings
-if (MSVC)
+if (WIN32)
     message("Windows")
     if (CMAKE_GENERATOR STREQUAL "MinGW Makefiles")
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
