@@ -63,17 +63,23 @@ namespace SouravTDD
     }
 }
 
-#define TEST \
-class Test : public SouravTDD::TestBase \
+#define SOURAVTDD_CLASS_FINAL( line ) Test ## line
+#define SOURAVTDD_CLASS_RELAY( line ) SOURAVTDD_CLASS_FINAL( line )
+#define SOURAVTDD_CLASS SOURAVTDD_CLASS_RELAY( __LINE__ )
+#define SOURAVTDD_INSTANCE_FINAL( line ) test ## line
+#define SOURAVTDD_INSTANCE_RELAY( line ) SOURAVTDD_INSTANCE_FINAL( line )
+#define SOURAVTDD_INSTANCE SOURAVTDD_INSTANCE_RELAY( __LINE__ )
+#define TEST(testname) \
+class SOURAVTDD_CLASS : public SouravTDD::TestBase \
 {\
     public: \
-        Test(std::string_view name) : TestBase(name) \
+        SOURAVTDD_CLASS (std::string_view name) : TestBase(name) \
             {\
                 SouravTDD::getTests().push_back(this);\
             }\
         void run() override;\
 }; \
-Test test ("testCanBeCreated"); \
-void Test::run()
+SOURAVTDD_CLASS SOURAVTDD_INSTANCE (testname); \
+void SOURAVTDD_CLASS::run()
 
 #endif //SOURAVTDD_TEST_H
