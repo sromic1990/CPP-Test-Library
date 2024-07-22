@@ -3,6 +3,7 @@
 #include <ostream>
 #include <string_view>
 #include <vector>
+#include <string>
 
 namespace SouravTDD
 {
@@ -14,6 +15,29 @@ namespace SouravTDD
 
         private:
             std::string_view mExType;
+    };
+
+    class ConfirmException
+    {
+        public:
+            ConfirmException() = default;
+            virtual ~ConfirmException() = default;
+            std::string_view getReason() const { return mReason; }
+
+        protected:
+            std::string mReason;
+    };
+
+    class BoolConfirmException : public ConfirmException
+    {
+        public:
+            BoolConfirmException(bool expected, int line)
+            {
+                mReason = "Confirm failed on line ";
+                mReason += std::to_string(line) + "\n";
+                mReason += "Expected: ";
+                mReason += expected ? "true" : "false";
+            }
     };
 
     class TestBase
@@ -66,6 +90,10 @@ namespace SouravTDD
             try
             {
                 test->runEx();   
+            }
+            catch(ConfirmException const & ex)
+            {
+                test->setFailed(ex.getReason());
             }
             catch(MissingException const & ex)
             {
@@ -170,4 +198,15 @@ namespace\
 SOURAVTDD_CLASS SOURAVTDD_INSTANCE (testname); \
 void SOURAVTDD_CLASS::run()
 
+#define CONFIRM_FALSE( actual )\
+if (actual)\
+{\
+    throw SouravTDD::BoolConfirmException(false, __LINE__);\
+}
+
+#define CONFIRM_TRUE( actual )\
+if (!actual)\
+{\
+    throw SouravTDD::BoolConfirmException(true, __LINE__);\
+}
 #endif //SOURAVTDD_TEST_H
