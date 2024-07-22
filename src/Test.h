@@ -127,40 +127,46 @@ namespace SouravTDD
 #define SOURAVTDD_INSTANCE_RELAY( line ) SOURAVTDD_INSTANCE_FINAL( line )
 #define SOURAVTDD_INSTANCE SOURAVTDD_INSTANCE_RELAY( __LINE__ )
 #define TEST(testname) \
-class SOURAVTDD_CLASS : public SouravTDD::TestBase \
+namespace\
 {\
-    public: \
-        SOURAVTDD_CLASS (std::string_view name) : TestBase(name) \
+    class SOURAVTDD_CLASS : public SouravTDD::TestBase \
+    {\
+        public: \
+            SOURAVTDD_CLASS (std::string_view name) : TestBase(name) \
             {\
                 SouravTDD::getTests().push_back(this);\
             }\
-        void run() override;\
-}; \
+            void run() override;\
+    }; \
+}\
 SOURAVTDD_CLASS SOURAVTDD_INSTANCE (testname); \
 void SOURAVTDD_CLASS::run()
 
 #define TEST_EX(testname, exceptionType) \
-class SOURAVTDD_CLASS : public SouravTDD::TestBase \
+namespace\
 {\
-    public: \
-        SOURAVTDD_CLASS (std::string_view name) : TestBase(name) \
+    class SOURAVTDD_CLASS : public SouravTDD::TestBase \
+    {\
+        public: \
+            SOURAVTDD_CLASS (std::string_view name) : TestBase(name) \
             {\
                 SouravTDD::getTests().push_back(this);\
             }\
-        void runEx() override\
-        {\
-            try\
+            void runEx() override\
             {\
-                run();\
+                try\
+                {\
+                    run();\
+                }\
+                catch(exceptionType const &) \
+                {\
+                    return;\
+                }\
+                throw SouravTDD::MissingException(#exceptionType);\
             }\
-            catch(exceptionType const &) \
-            {\
-                return;\
-            }\
-            throw SouravTDD::MissingException(#exceptionType);\
-        }\
-        void run() override;\
-}; \
+            void run() override;\
+    }; \
+}\
 SOURAVTDD_CLASS SOURAVTDD_INSTANCE (testname); \
 void SOURAVTDD_CLASS::run()
 
