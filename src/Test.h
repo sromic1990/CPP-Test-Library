@@ -40,6 +40,30 @@ namespace SouravTDD
             }
     };
 
+    class ActualConfirmException : public ConfirmException
+    {
+        public:
+            ActualConfirmException(int expected, int actual, int line) : mExpected(std::to_string(expected)), mActual(std::to_string(actual)), mLine(line)
+            {
+                formatReason();
+            }
+
+        private:
+            void formatReason()
+            {
+                mReason = "Confirm failed on line ";
+                mReason += std::to_string(mLine) + "\n";
+                mReason += "Expected: ";
+                mReason += mExpected;
+                mReason += "\nActual: ";
+                mReason += mActual;
+            }
+
+            std::string mExpected;
+            std::string mActual;
+            int mLine;
+    };
+
     class TestBase
     {
         public:
@@ -146,6 +170,22 @@ namespace SouravTDD
         output << std::endl;
         return numFailed;
     }
+
+    inline void confirm(bool expected, bool actual, int line)
+    {
+        if (expected != actual)
+        {
+            throw BoolConfirmException(expected, line);
+        }
+    }
+
+    inline void confirm(int expected, int actual, int line)
+    {
+        if (expected != actual)
+        {
+            throw ActualConfirmException(expected, actual, line);
+        }
+    }
 }
 
 #define SOURAVTDD_CLASS_FINAL( line ) Test ## line
@@ -199,14 +239,9 @@ SOURAVTDD_CLASS SOURAVTDD_INSTANCE (testname); \
 void SOURAVTDD_CLASS::run()
 
 #define CONFIRM_FALSE( actual )\
-if (actual)\
-{\
-    throw SouravTDD::BoolConfirmException(false, __LINE__);\
-}
-
+SouravTDD::confirm(false, actual, __LINE__)
 #define CONFIRM_TRUE( actual )\
-if (!actual)\
-{\
-    throw SouravTDD::BoolConfirmException(true, __LINE__);\
-}
+SouravTDD::confirm(true, actual, __LINE__)
+#define CONFIRM(expected, actual)\
+SouravTDD::confirm(expected, actual, __LINE__)
 #endif //SOURAVTDD_TEST_H
