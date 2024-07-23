@@ -1,19 +1,18 @@
 #include "Test.h"
 
-bool isPassingGrade(unsigned int grade)
+bool isNegative(int number)
 {
-    return grade >= 60;
+    return number < 0;
 }
 
 TEST("Test will pass without any confirms")
 {
 }
 
-TEST("Test passing grades")
+TEST("Test bool confirms")
 {
-    bool result = isPassingGrade(0);
+    bool result = isNegative(0);
     CONFIRM_FALSE(result);
-
-    result = isPassingGrade(100);
+    result = isNegative(-1);
     CONFIRM_TRUE(result);
 }
