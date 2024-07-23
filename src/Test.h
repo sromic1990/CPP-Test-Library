@@ -20,22 +20,23 @@ namespace SouravTDD
     class ConfirmException
     {
         public:
+            ConfirmException(int line) : mLine(line) {}
             ConfirmException() = default;
             virtual ~ConfirmException() = default;
-            std::string_view getReason() const { return mReason; }
+            std::string getReason() const { return mReason; }
+            int getLine() const { return mLine; }
 
         protected:
             std::string mReason;
+            int mLine;
     };
 
     class BoolConfirmException : public ConfirmException
     {
         public:
-            BoolConfirmException(bool expected, int line)
+            BoolConfirmException(bool expected, int line) : ConfirmException(line)
             {
-                mReason = "Confirm failed on line ";
-                mReason += std::to_string(line) + "\n";
-                mReason += "Expected: ";
+                mReason = "Expected: ";
                 mReason += expected ? "true" : "false";
             }
     };
@@ -43,7 +44,7 @@ namespace SouravTDD
     class ActualConfirmException : public ConfirmException
     {
         public:
-            ActualConfirmException(int expected, int actual, int line) : mExpected(std::to_string(expected)), mActual(std::to_string(actual)), mLine(line)
+            ActualConfirmException(std::string_view expected, std::string_view actual, int line) : mExpected(expected), mActual(actual), ConfirmException(line)
             {
                 formatReason();
             }
@@ -51,42 +52,45 @@ namespace SouravTDD
         private:
             void formatReason()
             {
-                mReason = "Confirm failed on line ";
-                mReason += std::to_string(mLine) + "\n";
-                mReason += "Expected: ";
+                mReason = "Expected: ";
                 mReason += mExpected;
                 mReason += "\nActual: ";
                 mReason += mActual;
             }
 
-            std::string mExpected;
-            std::string mActual;
-            int mLine;
+            std::string_view mExpected;
+            std::string_view mActual;
     };
 
     class TestBase
     {
         public:
-            TestBase(std::string_view name) : mName(name), mPassed(true) {}
+            TestBase(std::string_view name) : mName(name), mPassed(true), mConfirmLocation(-1) {}
             virtual ~TestBase() = default;
             virtual void run() = 0;
             virtual void runEx() { run (); }
             std::string_view getName() const { return mName; }
             bool passed() const { return mPassed; }
-            std::string_view getReason() const { return mReason; }
-            std::string_view getExpectedReason() const { return mExpectedReason; }
-            void setFailed(std::string_view reason) 
+            std::string getReason() const { return mReason; }
+            std::string getExpectedReason() const { return mExpectedReason; }
+            int getConfirmLocation() const { return mConfirmLocation; }
+            void setFailed(std::string reason, int confirmLocation = -1) 
             { 
                 mPassed = false; 
-                mReason = reason; 
+                mReason = reason;
+                mConfirmLocation = confirmLocation;
             }
-            void setExpectedFailureReason(std::string_view reason) { mExpectedReason = reason; }
+            void setExpectedFailureReason(std::string reason) 
+            { 
+                mExpectedReason = reason;
+            }
 
         private:
             std::string_view mName;
             bool mPassed;
-            std::string_view mReason;
-            std::string_view mExpectedReason;
+            std::string mReason;
+            std::string mExpectedReason;
+            int mConfirmLocation;
     };
 
     inline std::vector<TestBase*>& getTests()
@@ -117,7 +121,7 @@ namespace SouravTDD
             }
             catch(ConfirmException const & ex)
             {
-                test->setFailed(ex.getReason());
+                test->setFailed(ex.getReason(), ex.getLine());
             }
             catch(MissingException const & ex)
             {
@@ -130,6 +134,9 @@ namespace SouravTDD
             {
                 test->setFailed("Unexpected exception thrown.");
             }
+
+            // output << "Expected: " << test->getExpectedReason() << std::endl;
+            // output << "Actual: " << test->getReason() << std::endl;
 
             if (test->passed())
             {
@@ -157,7 +164,14 @@ namespace SouravTDD
             else
             {
                 ++numFailed;
-                output << "FAILED: " << test->getReason() << "\n";
+                if(test->getConfirmLocation() != -1)
+                {
+                    output << "FAILED: Confirm failed on line " << test->getConfirmLocation() << "\n";
+                }
+                else
+                    output << "FAILED: \n" << test->getReason() << "\n";
+
+                output << test->getReason() << std::endl;
             }
         }
 
@@ -179,11 +193,28 @@ namespace SouravTDD
         }
     }
 
-    inline void confirm(int expected, int actual, int line)
+    inline void confirm(std::string_view expected, std::string_view actual, int line)
     {
         if (expected != actual)
         {
             throw ActualConfirmException(expected, actual, line);
+        }
+    }
+
+    inline void confirm(std::string expected, std::string actual, int line)
+    {
+        if (expected != actual)
+        {
+            confirm(std::string_view(expected), std::string_view(actual), line);
+        }
+    }
+
+    template <typename T>
+    void confirm(T const & expected, T const & actual, int line)
+    {
+        if (expected != actual)
+        {
+            throw ActualConfirmException(std::to_string(expected), std::to_string(actual), line);
         }
     }
 }
