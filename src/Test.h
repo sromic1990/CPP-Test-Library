@@ -63,10 +63,21 @@ namespace SouravTDD
             std::string_view mActual;
     };
 
+    class TestBase;
+
+    inline std::vector<TestBase*>& getTests()
+    {
+        static std::vector<TestBase*> tests;
+        return tests;
+    }
+    
     class TestBase
     {
         public:
-            TestBase(std::string_view name) : mName(name), mPassed(true), mConfirmLocation(-1) {}
+            TestBase(std::string_view name) : mName(name), mPassed(true), mConfirmLocation(-1) 
+            {
+                getTests().push_back(this);
+            }
             virtual ~TestBase() = default;
             virtual void run() = 0;
             virtual void runEx() { run (); }
@@ -94,11 +105,28 @@ namespace SouravTDD
             int mConfirmLocation;
     };
 
-    inline std::vector<TestBase*>& getTests()
+    template <typename ExceptionT>
+    class TestExBase : public TestBase
     {
-        static std::vector<TestBase*> tests;
-        return tests;
-    }
+        public:
+            TestExBase(std::string_view name, std::string_view exceptionType)
+                : TestBase(name), mExceptionName(exceptionType) {}
+            void runEx() override
+            {
+                try
+                {
+                    run();
+                }
+                catch(ExceptionT const &)
+                {
+                    return;
+                }
+                throw MissingException(mExceptionName);
+            }
+
+        private:
+            std::string_view mExceptionName;
+    };
 
     inline int runTests(std::ostream& output)
     {
@@ -257,9 +285,7 @@ namespace\
     {\
         public: \
             SOURAVTDD_CLASS (std::string_view name) : TestBase(name) \
-            {\
-                SouravTDD::getTests().push_back(this);\
-            }\
+            {}\
             void run() override;\
     }; \
 }\
@@ -269,29 +295,15 @@ void SOURAVTDD_CLASS::run()
 #define TEST_EX(testname, exceptionType) \
 namespace\
 {\
-    class SOURAVTDD_CLASS : public SouravTDD::TestBase \
+    class SOURAVTDD_CLASS : public SouravTDD::TestExBase<exceptionType> \
     {\
         public: \
-            SOURAVTDD_CLASS (std::string_view name) : TestBase(name) \
-            {\
-                SouravTDD::getTests().push_back(this);\
-            }\
-            void runEx() override\
-            {\
-                try\
-                {\
-                    run();\
-                }\
-                catch(exceptionType const &) \
-                {\
-                    return;\
-                }\
-                throw SouravTDD::MissingException(#exceptionType);\
-            }\
+            SOURAVTDD_CLASS (std::string_view name, std::string_view exceptionName) : TestExBase(name, exceptionName) \
+            {}\
             void run() override;\
     }; \
 }\
-SOURAVTDD_CLASS SOURAVTDD_INSTANCE (testname); \
+SOURAVTDD_CLASS SOURAVTDD_INSTANCE (testname, #exceptionType); \
 void SOURAVTDD_CLASS::run()
 
 #define CONFIRM_FALSE( actual )\
