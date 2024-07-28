@@ -270,6 +270,14 @@ namespace SouravTDD
             throw ActualConfirmException(std::to_string(expected), std::to_string(actual), location.line());
         }
     }
+
+    template <typename T>
+    class SetupAndTeardown : public T
+    {
+        public:
+            SetupAndTeardown() { T::setup(); }
+            ~SetupAndTeardown() { T::tearDown(); }
+    };
 }
 
 #define SOURAVTDD_CLASS_FINAL( line ) Test ## line
