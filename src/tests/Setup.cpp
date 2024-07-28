@@ -1,5 +1,6 @@
 #include "Test.h"
 #include <string_view>
+#include <iostream>
 
 int createTestEntry()
 {
@@ -26,13 +27,33 @@ void deleteTestEntry(int /*id*/)
     //from the database.
 }
 
+class TempEntry
+{
+    public:
+        TempEntry()
+        {
+            mId = createTestEntry();
+        }
+        ~TempEntry()
+        {
+            std::cout<<"Destructor of TempID called\n";
+            deleteTestEntry(mId);
+        }
+        int getId() const
+        {
+            return mId;
+        }
+
+    private:
+        int mId;
+};
+
 
 TEST_EX("Test will run setup and teardown code", int)
 {
-    int id = createTestEntry();
-    //If this was a projecttest, it might be called
+    TempEntry entry{};
+    //If this was a project, it might be called
     //"Updating Empty name throws." And the type thrown
     //would be an int.
-    updateTestEntryName(id, "");
-    deleteTestEntry(id);
+    updateTestEntryName(entry.getId(), "");
 }
