@@ -1,5 +1,6 @@
 #include "Test.h"
 #include <string_view>
+#include <string>
 
 int createTestEntry()
 {
@@ -46,6 +47,43 @@ class TempEntry
 
     private:
         int mId;
+};
+
+std::string createTestTable()
+{
+    //If this was real code, it mnight open a
+    //connection to a database, create a temp
+    //table with a random name, and return the
+    //name of the table.
+    return "test_data_01";
+}
+
+void dropTestTable(std::string_view /*name*/)
+{
+    //If this was real code, it might drop the table
+    //from the database.
+}
+
+class TempTable
+{
+    public:
+        void Setup()
+        {
+            mName = createTestTable();
+        }
+
+        void tearDown()
+        {
+            dropTestTable(mName);
+        }
+
+        std::string getName()
+        {
+            return mName;
+        }
+
+    private:
+        std::string mName;
 };
 
 
