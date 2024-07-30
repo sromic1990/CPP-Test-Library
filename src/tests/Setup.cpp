@@ -67,7 +67,7 @@ void dropTestTable(std::string_view /*name*/)
 class TempTable
 {
     public:
-        void Setup()
+        void setup()
         {
             mName = createTestTable();
         }
@@ -78,6 +78,11 @@ class TempTable
         }
 
         std::string getName()
+        {
+            return mName;
+        }
+
+        std::string getTableName()
         {
             return mName;
         }
@@ -94,4 +99,18 @@ TEST_EX("Test will run setup and teardown code", int)
     //"Updating Empty name throws." And the type thrown
     //would be an int.
     updateTestEntryName(entry.getId(), "");
+}
+
+SouravTDD::TestSuiteSetupAndTearDown<TempTable> gTable1("Test suite setup/teardown 1", "Suite 1");
+SouravTDD::TestSuiteSetupAndTearDown<TempTable> gTable2("Test suite setup/teardown 2", "Suite 1");
+TEST_SUITE("Test part 1 of suite", "Suite 1")
+{
+    //if this was a projecttest, it could use the table names from gTablle1 and gTable2.
+    CONFIRM("test_data_01", gTable1.getTableName());
+    CONFIRM("test_data_01", gTable2.getTableName());
+}
+TEST_SUITE_EX("Test part 2 of suite", "Suite 1", int)
+{
+    //If this was a project test, it could use the table names from gTable1 and gTable2.
+    throw 1;
 }
