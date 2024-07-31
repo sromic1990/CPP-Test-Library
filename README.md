@@ -43,10 +43,10 @@ cmake_minimum_required(VERSION 3.10)
 project(NewProject)
 
 # Path to the extracted release
-set(CPP_TEST_LIBRARY_PATH "/path/to/extracted/CPP-Test-Library-1.0.0")
+set(TEST_LIBRARY_PATH "/path/to/extracted/SOURAVTDD-Test-Library-1.0.0")
 
-include_directories(${CPP_TEST_LIBRARY_PATH}/include)
-link_directories(${CPP_TEST_LIBRARY_PATH}/lib)
+include_directories(${TEST_LIBRARY_PATH}/include)
+link_directories(${TEST_LIBRARY_PATH}/lib)
 
 add_executable(NewProject main.cpp)
 
