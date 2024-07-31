@@ -6,6 +6,8 @@
 /Bin/
 /obj/
 /Obj/
+/release/
+/Release/
 
 # Ignore executable files
 *.exe
@@ -20,6 +22,9 @@
 *.obj
 *.lib
 *.a
+
+# Ignore tar files intended for distribution
+*.tar.gz
 
 # Ignore CMake generated files
 CMakeFiles/
