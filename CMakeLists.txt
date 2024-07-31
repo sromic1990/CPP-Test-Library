@@ -20,7 +20,8 @@ include_directories(
     "${ADDITIONAL_SOURCE_DIR}"
 )
 
-add_executable(Output ${SOURCES})
+#add_executable(Output ${SOURCES})
+add_library(CPPTestLibrary STATIC ${SOURCES})
 
 #Platform specific settings
 if (WIN32)
