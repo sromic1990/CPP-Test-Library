@@ -26,7 +26,7 @@ I am excited to announce the first release of the CPP-Test-Library, a comprehens
   - Macros for defining tests (`TEST`, `TEST_EX`, `TEST_SUITE`, `TEST_SUITE_EX`) with easy syntax.
   - Automatic generation of unique class names for tests to avoid naming conflicts.
 
-  ### How to Use
+### How to Use
 
 1. **Download and Extract**:
    - Download the `CPP-Test-Library-1.0.0.tar.gz` from the [Releases](https://github.com/sromic1990/CPP-Test-Library/releases) page.
@@ -51,6 +51,7 @@ link_directories(${CPP_TEST_LIBRARY_PATH}/lib)
 add_executable(NewProject main.cpp)
 
 target_link_libraries(NewProject CPPTestLibrary)
+```
 
 ### Example Usage
 
@@ -67,3 +68,4 @@ int main() {
     std::ostream &output = std::cout;
     return SouravTDD::runTests(output);
 }
+```
