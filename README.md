@@ -2,7 +2,7 @@ A test library to support TDD in C++ projects
 
 ### Overview
 
-I am excited to announce the first release of the CPP-Test-Library, a comprehensive testing framework designed for C++ projects. This release includes core functionalities to help developers create, manage, and run unit tests and test suites efficiently. The library is built to support exception handling, setup, and teardown mechanisms for robust testing processes.
+I am excited to announce the SOURAVTDD Test-Library, a comprehensive testing framework designed for C++ projects. Core functionalities include helping developers create, manage, and run unit tests and test suites efficiently. The library is built to support exception handling, setup, and teardown mechanisms for robust testing processes.
 
 ### Key Features
 
