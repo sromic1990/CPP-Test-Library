@@ -29,7 +29,7 @@ I am excited to announce the first release of the CPP-Test-Library, a comprehens
 ### How to Use
 
 1. **Download and Extract**:
-   - Download the `CPP-Test-Library-1.0.0.tar.gz` from the [Releases](https://github.com/sromic1990/CPP-Test-Library/releases) page.
+   - Download the `SOURAVTDD-Test-Library-1.0.0.tar.gz` from the [Releases](https://github.com/sromic1990/CPP-Test-Library/releases) page.
    - Extract the tarball to a known location.
 
 2. **Integrate with Your Project**:
